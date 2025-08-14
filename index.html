@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+  <title>Death Note</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+
+  <body>
+    <audio autoplay loop> 
+      <source src="dead320.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+
+    <canvas id="rain"></canvas>
+
+    <div class="intro-container">
+      <h1 class="intro-text">I am Ryuk. A god of death. And I dropped something in the human world...</h1>
+    </div>
+    <div class="image-container">
+      <img src="ryuk.png" alt="Ryuk Image">
+    </div>
+
+    <div class="button-container">
+      <a href="#" id="takeNotebook" class="button-style">Take the Dead Note</a>
+    </div>
+
+    <script src="script.js"></script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+    
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyAP3uzXeofwnQB3QDXU5GGI2M7MYv1bzxw",
+        authDomain: "deadnote-730c1.firebaseapp.com",
+        projectId: "deadnote-730c1",
+        storageBucket: "deadnote-730c1.firebasestorage.app",
+        messagingSenderId: "240762396833",
+        appId: "1:240762396833:web:91d1385f565f239ad350e0",
+        measurementId: "G-WHF9BYT4HH"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      
+      // Initialize analytics with error handling
+      let analytics;
+      try {
+        analytics = getAnalytics(app);
+      } catch (error) {
+        console.log("Analytics not available:", error);
+      }
+      
+      const db = getFirestore(app);
+
+      // Function to add record to Firestore
+      async function addRecord(nick, victim) {
+        try {
+          const docRef = await addDoc(collection(db, "records"), {
+            nick: nick,
+            victim: victim,
+            date: new Date()
+          });
+          console.log("Document written with ID: ", docRef.id);
+          alert("Record added successfully!");
+        } catch (e) {
+          console.error("Error adding document: ", e);
+          alert("Error adding record: " + e.message);
+        }
+      }
+
+      // Wait for DOM to be ready before adding event listeners
+      document.addEventListener('DOMContentLoaded', () => {
+        // Connect button to function
+        const addBtn = document.getElementById("addBtn");
+        if (addBtn) {
+          addBtn.addEventListener("click", () => {
+            const nick = document.getElementById("nick").value;
+            const victim = document.getElementById("victim").value;
+            if (nick && victim) {
+              addRecord(nick, victim);
+            } else {
+              alert("Please fill in both fields!");
+            }
+          });
+        }
+      });
+    </script>
+<script>
+  const canvas = document.getElementById('rain');
+  const ctx = canvas.getContext('2d');
+  const drops = [];
+  
+  function createDrops() {
+    drops.length = 0; // Clear existing drops
+    for(let i = 0; i < 500; i++) {
+      drops.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        length: Math.random() * 20 + 10,
+        velocity: Math.random() * 4 + 4
+      });
+    }
+  }
+  
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    // Recreate drops when resizing to ensure proper coverage
+    createDrops();
+  }
+  
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 1;
+  
+    for(let i = 0; i < drops.length; i++) {
+      let d = drops[i];
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x, d.y + d.length);
+      ctx.stroke();
+  
+      d.y += d.velocity;
+      if(d.y > canvas.height) d.y = -d.length;
+    }
+    requestAnimationFrame(draw);
+  }
+  
+  // Initialize everything
+  window.addEventListener('resize', resize);
+  resize();
+  createDrops();
+  draw();
+  </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('takeNotebook');
+
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    document.body.classList.add('page-flip');
+
+    setTimeout(() => {
+      window.location.href = 'nextpage.html';
+    }, 1000);
+  });
+});
+    </script>
+    
+      
+  </body>
+</html>

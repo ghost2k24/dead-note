@@ -1,0 +1,51 @@
+ body {
+    background: url('note.jpg') no-repeat center top;
+    background-size: contain; /* или попробуй cover, чтобы подобрать под экран */
+    background-color: #f5f1e9; /* светлый цвет бумаги, если картинка не загрузится */
+    margin: 0;
+    padding: 0;
+    font-family: serif;
+    height: 100vh;
+    overflow-x: hidden;
+  }
+  #pen-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 40px;              /* увеличенный внутренний отступ */
+    border-radius: 12px;
+    z-index: 1000;
+    width: 350px;               /* шире блок */
+  }
+  
+  #pen-container img {
+    width: 220px;               /* увеличенная гифка */
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+  }
+  
+  #takePen {
+    background-color: #000000; /* чёрный фон */
+    color: #ffffff; /* белый текст */
+    font-weight: 900; /* очень жирный */
+    font-family: 'UnifacturCook', sans-serif; /* жирный, понятный шрифт */
+    font-size: 18px;
+    padding: 12px 30px;
+    border: 2px solid #ffffff; /* белая обводка */
+    border-radius: 8px;
+    box-shadow:
+      0 0 8px 2px rgba(255, 255, 255, 0.7), /* белое свечение вокруг */
+      0 4px 6px rgba(0, 0, 0, 0.6); /* тень для объёма */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.9); /* свечение текста */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  #takePen:hover {
+    background-color: #111111; /* чуть темнее при наведении */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* усиливаем свечение */
+  }

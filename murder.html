@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>murder</title>
+  <link rel="stylesheet" href="style-murder.css">
+  <link rel="icon" href="favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="background-color: black; margin: 0; padding: 0; font-family: serif;">
+  <audio autoplay loop> 
+    <source src="dead321.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <canvas id="rain"></canvas>
+  <div class="content-container">
+    <div id="enter-nick-section">
+      <input type="text" id="nick-input" placeholder="Your nickname">
+      <button id="start-btn">Start recording</button>
+    </div>
+    
+    <div id="record-section" style="display:none;">
+      <p>Your nickname: <span id="current-nick"></span></p>
+      <label for="victim-input">Who to kill?</label>
+      <input type="text" id="victim-input" placeholder="Victim's name">
+      <label for="method-input">How to kill?</label>
+      <input type="text" id="method-input" placeholder="Kill method">
+      <button id="save-record-btn">Kill</button>
+    </div>
+    
+    <div id="already-submitted-section" style="display:none;">
+      <h2>You have already submitted your entry to the Death Note</h2>
+      <p>Your nickname: <span id="submitted-nick"></span></p>
+      <p>You can now only view other users' entries.</p>
+      <button id="view-all-records-btn">View Death Note Records</button>
+    </div>
+    
+    <div id="view-records-section" style="display:none;">
+      <button id="view-records-btn">View records</button>
+      <div id="records-list" style="margin-top:20px;"></div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, initializing...');
+      
+      const nickInput = document.getElementById('nick-input');
+      const startBtn = document.getElementById('start-btn');
+      const enterNickSection = document.getElementById('enter-nick-section');
+      const recordSection = document.getElementById('record-section');
+      const alreadySubmittedSection = document.getElementById('already-submitted-section');
+      const currentNickSpan = document.getElementById('current-nick');
+      const submittedNickSpan = document.getElementById('submitted-nick');
+      const victimInput = document.getElementById('victim-input');
+      const methodInput = document.getElementById('method-input');
+      const saveRecordBtn = document.getElementById('save-record-btn');
+      const viewRecordsSection = document.getElementById('view-records-section');
+      const viewRecordsBtn = document.getElementById('view-records-btn');
+      const viewAllRecordsBtn = document.getElementById('view-all-records-btn');
+      const recordsList = document.getElementById('records-list');
+      
+      console.log('Elements found:', {
+        nickInput: !!nickInput,
+        startBtn: !!startBtn,
+        saveRecordBtn: !!saveRecordBtn,
+        viewRecordsBtn: !!viewRecordsBtn,
+        viewAllRecordsBtn: !!viewAllRecordsBtn
+      });
+    
+      let currentNick = '';
+    
+      // Check if user has already submitted an entry
+      function checkUserSubmission(nick) {
+        const records = JSON.parse(localStorage.getItem('deathNoteRecords')) || [];
+        return records.some(record => record.nick === nick);
+      }
+    
+      // Initialize page - check if user has already submitted
+      function initializePage() {
+        const savedNick = localStorage.getItem('currentUserNick');
+        if (savedNick && checkUserSubmission(savedNick)) {
+          // User has already submitted, show appropriate section
+          currentNick = savedNick;
+          submittedNickSpan.textContent = currentNick;
+          enterNickSection.style.display = 'none';
+          recordSection.style.display = 'none';
+          alreadySubmittedSection.style.display = 'block';
+        }
+      }
+      
+      // Function to clear user data (for testing purposes)
+      function clearUserData() {
+        localStorage.removeItem('currentUserNick');
+        location.reload();
+      }
+      
+      // Add a small debug button for testing (can be removed in production)
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        const debugBtn = document.createElement('button');
+        debugBtn.textContent = 'Clear Data (Debug)';
+        debugBtn.style.position = 'fixed';
+        debugBtn.style.top = '10px';
+        debugBtn.style.right = '10px';
+        debugBtn.style.zIndex = '1000';
+        debugBtn.style.background = '#333';
+        debugBtn.style.color = '#fff';
+        debugBtn.style.border = '1px solid #666';
+        debugBtn.style.padding = '5px 10px';
+        debugBtn.style.fontSize = '12px';
+        debugBtn.onclick = clearUserData;
+        document.body.appendChild(debugBtn);
+      }
+      
+      console.log('Setting up button event handlers...');
+    
+      if (startBtn) {
+        startBtn.onclick = (e) => {
+          console.log('Start button clicked!');
+          e.preventDefault();
+          const nick = nickInput.value.trim();
+          if (nick === '') {
+            nickInput.style.borderColor = 'red';
+            nickInput.placeholder = 'Please enter your nickname';
+            setTimeout(() => {
+              nickInput.style.borderColor = '';
+              nickInput.placeholder = 'Your nickname';
+            }, 2000);
+            return;
+          }
+          
+          // Check if user has already submitted an entry
+          if (checkUserSubmission(nick)) {
+            nickInput.style.borderColor = 'red';
+            nickInput.placeholder = 'You have already submitted an entry';
+            setTimeout(() => {
+              nickInput.style.borderColor = '';
+              nickInput.placeholder = 'Your nickname';
+            }, 3000);
+            return;
+          }
+          
+          currentNick = nick;
+          localStorage.setItem('currentUserNick', nick);
+          currentNickSpan.textContent = currentNick;
+          enterNickSection.style.display = 'none';
+          recordSection.style.display = 'block';
+          viewRecordsSection.style.display = 'block';
+        };
+        console.log('Start button event handler set');
+      } else {
+        console.error('Start button not found!');
+      }
+      
+      if (saveRecordBtn) {
+        saveRecordBtn.onclick = (e) => {
+          console.log('Save record button clicked!');
+          e.preventDefault();
+          const victim = victimInput.value.trim();
+          const method = methodInput.value.trim();
+          if (victim === '' || method === '') {
+            if (victim === '') {
+              victimInput.style.borderColor = 'red';
+              victimInput.placeholder = 'Please enter victim name';
+            }
+            if (method === '') {
+              methodInput.style.borderColor = 'red';
+              methodInput.placeholder = 'Please enter kill method';
+            }
+            setTimeout(() => {
+              victimInput.style.borderColor = '';
+              methodInput.style.borderColor = '';
+              victimInput.placeholder = 'Victim\'s name';
+              methodInput.placeholder = 'Kill method';
+            }, 2000);
+            return;
+          }
+          
+          // Get records from localStorage or create new array
+          let records = JSON.parse(localStorage.getItem('deathNoteRecords')) || [];
+          
+          // Add new record
+          records.push({
+            nick: currentNick,
+            victim: victim,
+            method: method,
+            date: new Date().toLocaleString()
+          });
+          
+          // Save back to localStorage
+          localStorage.setItem('deathNoteRecords', JSON.stringify(records));
+          
+          // Show success message
+          const successMsg = document.createElement('div');
+          successMsg.textContent = 'Your entry has been added to the Death Note!';
+          successMsg.style.color = '#4CAF50';
+          successMsg.style.textAlign = 'center';
+          successMsg.style.marginTop = '10px';
+          successMsg.style.fontWeight = 'bold';
+          recordSection.appendChild(successMsg);
+          
+          // Clear form
+          victimInput.value = '';
+          methodInput.value = '';
+          
+          // After 3 seconds, switch to "already submitted" view
+          setTimeout(() => {
+            recordSection.style.display = 'none';
+            viewRecordsSection.style.display = 'none';
+            submittedNickSpan.textContent = currentNick;
+            alreadySubmittedSection.style.display = 'block';
+          }, 3000);
+        };
+        console.log('Save record button event handler set');
+      } else {
+        console.error('Save record button not found!');
+      }
+      
+      if (viewRecordsBtn) {
+        viewRecordsBtn.onclick = (e) => {
+          console.log('View records button clicked!');
+          e.preventDefault();
+          try {
+            window.location.replace('records.html');
+          } catch (error) {
+            window.open('records.html', '_self');
+          }
+        };
+        console.log('View records button event handler set');
+      } else {
+        console.error('View records button not found!');
+      }
+      
+      if (viewAllRecordsBtn) {
+        viewAllRecordsBtn.onclick = (e) => {
+          console.log('View all records button clicked!');
+          e.preventDefault();
+          try {
+            window.location.replace('records.html');
+          } catch (error) {
+            window.open('records.html', '_self');
+          }
+        };
+        console.log('View all records button event handler set');
+      } else {
+        console.error('View all records button not found!');
+      }
+      
+      console.log('All button event handlers set up');
+      
+      // Initialize the page
+      initializePage();
+      
+      // Rain animation script - moved inside DOMContentLoaded
+      const canvas = document.getElementById('rain');
+      const ctx = canvas.getContext('2d');
+      
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      
+      window.addEventListener('resize', resize);
+      resize();
+      
+      const drops = [];
+      
+      function createDrops() {
+        for(let i = 0; i < 500; i++) {
+          drops.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            length: Math.random() * 20 + 10,
+            velocity: Math.random() * 4 + 4
+          });
+        }
+      }
+      
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 1;
+      
+        for(let i = 0; i < drops.length; i++) {
+          let d = drops[i];
+          ctx.beginPath();
+          ctx.moveTo(d.x, d.y);
+          ctx.lineTo(d.x, d.y + d.length);
+          ctx.stroke();
+      
+          d.y += d.velocity;
+          if(d.y > canvas.height) d.y = -d.length;
+        }
+        requestAnimationFrame(draw);
+      }
+      
+      createDrops();
+      draw();
+      
+      console.log('Initialization complete!');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+body {
+    background-color: #1b1b1b; /* тёмный фон, как будто страница ночной тетради */
+    font-family: 'Courier New', Courier, monospace; /* моноширинный шрифт, как у записей */
+    color: #eee; /* светлый текст, чтобы было видно */
+    margin: 20px;
+    padding: 0;
+    user-select: text; /* чтобы можно было выделять текст */
+  }
+  
+  .container {
+    background: #2e2e2e url('https://i.imgur.com/6m9X0hf.png') repeat; /* фон с текстурой бумаги (пример) */
+    border: 2px solid #444;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px 30px;
+    box-shadow: 0 0 15px #000;
+    white-space: pre-wrap; /* сохраняет переносы строк в тексте */
+  }
+  
+  .notebook-info {
+    background-color: rgba(139, 0, 0, 0.1);
+    border: 1px solid #8b0000;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: center;
+    color: #ffcccc;
+    font-style: italic;
+  }
+  
+  .notebook-info p {
+    margin: 8px 0;
+    font-size: 1rem;
+  }
+  
+  .record {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-left: 4px solid #ff5555;
+    padding: 12px 20px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    font-style: italic; /* чтобы добавить немного «почерка» */
+    color: #f2f2f2;
+    filter: drop-shadow(1px 1px 1px #000);
+  }
+  
+  /* Кнопки, чтобы выглядели в тематике */
+  button {
+    background-color: #330000;
+    border: 1px solid #ff4444;
+    color: #ff9999;
+    padding: 10px 18px;
+    margin: 10px 6px;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #550000;
+  }
+  
+  /* Заголовок */
+  h1 {
+    font-family: 'Creepster', cursive; /* можно подключить с Google Fonts для страшного эффекта */
+    color: #ff4444;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 3px black;
+  }
+  
+  .pagination {
+    text-align: center;
+    margin: 30px 0;
+  }
+  
+  .back-to-note {
+    text-align: center;
+    margin: 30px 0;
+  }
+  
+  .back-to-note button {
+    background-color: #1a1a1a;
+    border: 2px solid #666;
+    color: #ccc;
+    font-size: 1.1rem;
+    padding: 15px 25px;
+  }
+  
+  .back-to-note button:hover {
+    background-color: #333;
+    border-color: #888;
+  }
+  
+  .no-records {
+    text-align: center;
+    padding: 40px;
+    color: #888;
+    font-style: italic;
+  }
+  
+  .no-records p {
+    margin: 10px 0;
+    font-size: 1.2rem;
+  }
+  
+  
+  

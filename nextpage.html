@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Death Note Instructions</title>
+  <link rel="stylesheet" href="style-next.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="background-color: black; margin: 0; padding: 0; font-family: serif;">
+
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;">
+
+    <!-- Инструкция с кнопкой поверх -->
+    <div class="instruction-container">
+      <img src="instruction.jpg" alt="Instructions" class="instruction-img">
+      <button id="engrave-name" class="button-style">Engrave the name</button>
+    </div>
+
+  </div>
+
+  <audio autoplay loop> 
+    <source src="dead320.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const btn = document.getElementById('engrave-name');
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.body.classList.add('page-flip');
+      setTimeout(() => {
+        window.location.href = 'note.html';
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>

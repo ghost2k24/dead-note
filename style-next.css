@@ -1,0 +1,113 @@
+/* Page Flip Animation */
+@keyframes pageFlip {
+  0% {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(-90deg);
+    opacity: 0;
+  }
+}
+
+body.page-flip {
+  animation: pageFlip 1s forwards;
+  transform-origin: left center;
+  perspective: 1200px;
+  background: #000;
+}
+
+body {
+    margin: 0;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* чтобы было сверху, не по центру вертикально */
+    min-height: 100vh;
+    padding-top: 30px; /* отступ сверху для всей страницы */
+    box-sizing: border-box;
+  }
+  
+  .instruction-page {
+    width: 90vw;
+    max-width: 800px;
+  }
+  
+  .instruction-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 2px solid red;
+    border-radius: 10px;
+    box-shadow: 0 0 20px red;
+  }
+  .button-style {
+    display: inline-block;
+    padding: 12px 30px;
+    color: white;            /* белый текст */
+    background-color: black; /* чёрный фон */
+    border: 2px solid red;   /* красная обводка */
+    border-radius: 8px;      /* скруглённые углы */
+    text-decoration: none;   /* убрать подчёркивание */
+    font-family: 'Georgia', serif;  /* шрифт как на сайте */
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .button-style:hover {
+    background-color: red;   /* при наведении фон красный */
+    color: black;            /* текст — чёрный */
+  }
+  .button-style {
+    margin-top: 10px; /* отступ сверху у кнопки */
+    /* остальные стили кнопки оставь без изменений */
+  }
+  .instruction-container {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .instruction-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  
+  #engrave-name {
+  position: absolute;
+  bottom: 15px; /* чуть выше края картинки */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Hide any hashtag links that might appear in the bottom left corner */
+a[href^="#"] {
+  display: none !important;
+}
+
+/* Specifically hide any links with Russian text or hashtags */
+a[href*="маленькая"],
+a[href*="small"],
+a[href*="little"] {
+  display: none !important;
+}
+
+/* Hide any links containing "hashtag" or "index.html" */
+a[href*="hashtag"],
+a[href*="index.html"] {
+  display: none !important;
+}
+
+/* Hide any elements that might flash in the bottom left corner */
+body::before,
+body::after {
+  display: none !important;
+}
+
+/* Prevent any flash of unwanted content during page load */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

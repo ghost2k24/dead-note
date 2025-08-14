@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Death Note — Records</title>
+<link rel="stylesheet" href="style-records.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <audio autoplay loop> 
+        <source src="dead320.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+  
+  <h1>Death Note — Records</h1>
+  
+  <div class="notebook-info">
+    <p>Welcome to the Death Note notebook. Here you can view all entries from users who have written in the Death Note.</p>
+    <p>Each user can only write one entry. After that, they become a spectator.</p>
+  </div>
+
+  <div class="notebook" id="recordsContainer">
+    <!-- Записи появятся здесь -->
+  </div>
+
+  <div class="pagination">
+    <button id="prevBtn">← Previous</button>
+    <span id="pageNumber">Page 1</span>
+    <button id="nextBtn">Next </button>
+  </div>
+  
+  <div class="back-to-note">
+    <button id="backToNoteBtn">← Back to Death Note</button>
+  </div>
+
+  <script>
+    const recordsPerPage = 20;
+    let currentPage = 1;
+    let records = [];
+
+    // Get DOM elements
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageNumber = document.getElementById('pageNumber');
+    const recordsContainer = document.getElementById('recordsContainer');
+    const backToNoteBtn = document.getElementById('backToNoteBtn');
+
+    function loadRecords() {
+      const recordsJSON = localStorage.getItem('deathNoteRecords');
+      records = recordsJSON ? JSON.parse(recordsJSON) : [];
+      currentPage = 1;
+      renderPage();
+    }
+
+    function renderPage() {
+      recordsContainer.innerHTML = '';
+
+      if (records.length === 0) {
+        recordsContainer.innerHTML = '<div class="no-records"><p>No records found in the Death Note yet.</p><p>Be the first to write in it!</p></div>';
+        pageNumber.textContent = '';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+
+      const startIndex = (currentPage - 1) * recordsPerPage;
+      const endIndex = Math.min(startIndex + recordsPerPage, records.length);
+
+      for (let i = startIndex; i < endIndex; i++) {
+        const { nick, victim, method, date } = records[i];
+        const div = document.createElement('div');
+        div.className = 'record';
+
+        const nickElem = document.createElement('div');
+        nickElem.className = 'victim';
+        nickElem.style.fontSize = '1.1rem';
+        nickElem.style.color = '#aaa68a';
+        nickElem.textContent = 'Killer: ' + nick;
+
+        const victimElem = document.createElement('div');
+        victimElem.className = 'victim';
+        victimElem.textContent = 'Victim: ' + victim;
+
+        const methodElem = document.createElement('div');
+        methodElem.className = 'reason';
+        methodElem.textContent = 'Method: ' + method;
+
+        const dateElem = document.createElement('div');
+        dateElem.className = 'reason';
+        dateElem.style.fontSize = '0.9rem';
+        dateElem.style.color = '#888';
+        dateElem.textContent = 'Date: ' + date;
+
+        div.appendChild(nickElem);
+        div.appendChild(victimElem);
+        div.appendChild(methodElem);
+        div.appendChild(dateElem);
+        recordsContainer.appendChild(div);
+      }
+
+      const totalPages = Math.ceil(records.length / recordsPerPage);
+      pageNumber.textContent = `Page ${currentPage} of ${totalPages}`;
+
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage >= totalPages;
+    }
+
+    function nextPage() {
+      const totalPages = Math.ceil(records.length / recordsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderPage();
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPage();
+      }
+    }
+    
+    function goBackToNote() {
+      window.location.href = 'note.html';
+    }
+
+    // Add event listeners for pagination buttons
+    prevBtn.addEventListener('click', prevPage);
+    nextBtn.addEventListener('click', nextPage);
+    backToNoteBtn.addEventListener('click', goBackToNote);
+
+    // Initialize the page
+    loadRecords();
+  </script>
+</body>
+</html>

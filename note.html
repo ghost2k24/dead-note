@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Note</title>
+  <link rel="stylesheet" href="style-note.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="background-color: black; margin: 0; padding: 0; font-family: serif;">
+  <audio autoplay loop> 
+    <source src="dead320.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Просто гифка и кнопка без серого блока -->
+  <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 1000;">
+    <img src="pen.gif" alt="Animated Pen" style="width: 400px; height: auto; display: block; margin: 0 auto 20px;">
+    <button id="takePen">Take Pen</button>
+      
+  </div>
+
+  <script>
+    document.getElementById('takePen').addEventListener('click', () => {
+      window.location.href = 'murder.html';
+    });
+  </script>
+</body>
+</html>
